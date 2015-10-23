@@ -273,7 +273,6 @@ class GvGen:
         Get the properties string according to parent/children
         props is the properties dictionnary
         """
-
         allProps = {}
 
         #
@@ -295,12 +294,13 @@ class GvGen:
         #
         allProps.update(props)
 
+
         if self.__has_children(node):
-            propStringList = ["%s=\"%s\";\n" % (k, v) for k, v in allProps.iteritems()]
+            propStringList = ["%s=%s;\n" % (k, format_property(k, v)) for k, v in allProps.iteritems()]
             properties = ''.join(propStringList)
         else:
             if props:
-                propStringList = ["%s=\"%s\"" % (k, v) for k, v in allProps.iteritems()]
+                propStringList = ["%s=%s" % (k, format_property(k, v)) for k, v in allProps.iteritems()]
                 properties = '[' + ','.join(propStringList) + ']'
             else:
                 properties = ''
@@ -320,7 +320,7 @@ class GvGen:
 
         properties = ''
         if props:
-            properties += ','.join(["%s=\"%s\"" % (str(k),str(val)) for k, val in props.iteritems()])
+            properties += ','.join(["%s=%s" % (str(k), format_property(k, val)) for k, val in props.iteritems()])
         return properties
 
     def propertyForeachLinksAppend(self, node, key, val):
@@ -573,6 +573,14 @@ class GvGen:
             # Remove our reference to file descriptor
             self.fd = None
 
+
+def format_property(k, v):
+    s = str(v)
+    if s and s[0] == '<':
+        res = '<%s>' % s
+    else:
+        res = '"%s"' % s
+    return res
 
 if __name__ == "__main__":
     graph = GvGen()
