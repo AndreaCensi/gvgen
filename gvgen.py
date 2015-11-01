@@ -576,10 +576,12 @@ class GvGen:
 
 def format_property(k, v):
     s = str(v)
+    def escape(x):
+        return x.replace('\n', '\\n')
     if s and s[0] == '<':
-        res = '<%s>' % s
+        res = '<%s>' % escape(s)
     else:
-        res = '"%s"' % s
+        res = '"%s"' % escape(s)
     return res
 
 if __name__ == "__main__":
